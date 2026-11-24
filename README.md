@@ -25,11 +25,14 @@ genauen Paketstand von NixOS 26.05 fest.
 - **USB-Stick:** Die ISO als Laufwerksabbild auf den Stick schreiben. Dabei
   werden vorhandene Daten auf dem ausgewählten Stick überschrieben. Den Stick
   anschließend im Bootmenü des Rechners auswählen.
-- **GNOME testen:** Die Live-Sitzung startet ohne Installation. Änderungen
+- **GNOME testen:** Die Live-Sitzung startet ohne Installation mit deutscher
+  Systemsprache (`de_DE.UTF-8`) und der Zeitzone `Europe/Berlin`. GNOME und die
+  virtuelle Konsole verwenden das deutsche Tastaturlayout (`de`). Änderungen
   innerhalb der Live-Sitzung gehen beim Neustart verloren.
 - **Installieren:** Eine Internetverbindung herstellen. In der GNOME-Übersicht
-  **Install System** (deutsch **System installieren**) öffnen, die
-  Desktop-Auswahl auf GNOME lassen und den Zieldatenträger prüfen. Nach
+  **System installieren** öffnen. Im Installer Sprache, Tastaturlayout und
+  Zeitzone für das Zielsystem prüfen, die Desktop-Auswahl auf GNOME lassen
+  und den Zieldatenträger prüfen. Nach
   erfolgreicher Installation das Startmedium entfernen und vom Ziel booten.
 
 ## Hardwarekonfiguration
