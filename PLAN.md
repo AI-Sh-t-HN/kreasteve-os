@@ -29,14 +29,53 @@ Textvorschlag für die Hinweisseite:
 Der Installer soll zwei Seiten anbieten. Jede Option erhält eine kurze
 Beschreibung, damit Steve entscheiden kann, was er im Zielsystem nutzen möchte.
 
-1. **GNOME Extensions** – Auswahl von Desktop-Erweiterungen, etwa einem
-   Verlauf für die Zwischenablage.
+1. **GNOME Extensions** – Desktop-Layout und Erweiterungen für den ersten Login.
 2. **KI** – Auswahl lokaler KI-Funktionen. Kandidaten sind Diktieren per
    Tastenkürzel mit Whisper und das Vorlesen von Texten. Für das Diktat ist
    automatische CUDA-Beschleunigung auf geeigneten NVIDIA-GPUs mit einer
    CPU-Variante für andere Rechner und VMs vorgeschlagen.
 
-Die konkreten Optionen und ihre Vorauswahl bleiben offen.
+Offen sind die Vorauswahl beider Seiten und die konkreten Optionen der KI-Seite.
+
+#### GNOME Extensions
+
+Unter **Desktop-Layout** wählt Steve genau eine Variante. „GNOME-Standard“
+behält die normale GNOME-Übersicht bei, „Dock“ aktiviert Dash to Dock und
+„Klassische Taskleiste“ aktiviert Dash to Panel. Die Einfachauswahl schließt
+eine gleichzeitige Aktivierung der beiden Erweiterungen aus. Im geprüften
+Nixpkgs-Stand sind die Layout-Pakete `gnomeExtensions.dash-to-dock` (105)
+und `gnomeExtensions.dash-to-panel` (73).
+
+Die übrigen Erweiterungen sind einzeln wählbar.
+
+| Erweiterung | Paket unter `gnomeExtensions` (Version im Projektstand) | Kurzbeschreibung für die Auswahl |
+| --- | --- | --- |
+| Blur my Shell | `blur-my-shell` (72) | Ergänzt Unschärfe- und Transparenzeffekte. |
+| Tiling Assistant | `tiling-assistant` (54) | Ordnet Fenster nebeneinander und in Bildschirmbereichen an. |
+| Caffeine | `caffeine` (60) | Hält den Bildschirm wach und verhindert bei Bedarf den automatischen Standby. |
+| AppIndicator Support | `appindicator` (64) | Zeigt Statussymbole von Hintergrundanwendungen in der oberen Leiste. |
+| Clipboard Indicator | `clipboard-indicator` (71) | Macht frühere Einträge der Zwischenablage durchsuchbar. |
+| Just Perfection | `just-perfection` (36) | Passt Aussehen und Verhalten der GNOME-Oberfläche an. |
+| GSConnect | `gsconnect` (72) | Verbindet ein Smartphone für Dateitransfer und Benachrichtigungen. |
+| Alphabetical App Grid | `alphabetical-app-grid` (44) | Sortiert die Anwendungsübersicht alphabetisch. |
+| User Themes | `user-themes` (73) | Ermöglicht eigene Designs für die GNOME Shell. |
+| Vitals | `vitals` (76) | Zeigt CPU- und RAM-Auslastung, Temperaturen und Netzwerkaktivität. |
+| Night Theme Switcher | `night-theme-switcher` (82) | Wechselt automatisch zwischen hellem und dunklem Design. |
+| Privacy Quick Settings | `privacy-settings-menu` (28) | Macht Datenschutzeinstellungen im Systemmenü erreichbar. |
+| Extension List | `extension-list` (43, geplant 45) | Verwaltet Erweiterungen über die obere Leiste. |
+| Apps Menu | `applications-menu` (74) | Ergänzt ein nach Kategorien geordnetes Anwendungsmenü. |
+
+Für GNOME Shell 50.6 deklarieren 15 der 16 Erweiterungen im fixierten
+Nixpkgs-Stand Unterstützung für GNOME 50. Für **Extension List** ist
+Version 45 separat einzubinden. Die paketierte Version 43 unterstützt GNOME 49.
+Der Laufzeittest der Erweiterungen steht aus.
+[Extension List bei GNOME](https://extensions.gnome.org/extension/3088/extension-list/)
+
+Bei Auswahl von **GSConnect** aktiviert der Installer im Zielsystem
+`programs.kdeconnect` mit `pkgs.gnomeExtensions.gsconnect` als Paket.
+Das Modul öffnet die für die Kopplung vorgesehenen Ports 1714–1764 für TCP
+und UDP. Diese Freigabe ist an die Auswahl von GSConnect gebunden.
+[NixOS-Modul im Projektstand](https://github.com/NixOS/nixpkgs/blob/0dc498bfe49baeb18b0f9891e800b53bb2603193/nixos/modules/programs/kdeconnect.nix)
 
 ## Wichtig
 
@@ -81,6 +120,29 @@ Textvorschlag für die Partitionierungsseite:
 > kannst, und bewahre sie sicher auf. Du kannst die Verschlüsselung abwählen.
 
 ## Nice to have
+
+### GNOME-Erweiterungen direkt im Live-System ausprobieren
+
+Ändert Steve auf der Installer-Seite „GNOME Extensions“ eine Option, soll
+der laufende Live-Desktop die Änderung sofort zeigen. Wechselt er etwa
+vom Dock zur klassischen Taskleiste, soll die Vorschau zuerst Dash to Dock
+deaktivieren und anschließend Dash to Panel aktivieren. Die endgültige
+Auswahl gilt für den ersten Login im installierten System.
+
+Für eine Offline-Vorschau müssten die angebotenen Erweiterungen bereits
+beim Start der Live-Sitzung auf der ISO verfügbar sein. Calamares startet
+über `pkexec` mit Root-Rechten. Die Installer-Seite müsste jede Änderung an
+die GNOME-Sitzung des Live-Benutzers übergeben und dort den erreichten
+Zustand prüfen. GNOME Shell 50.6 unterstützt beides über D-Bus.
+[Erweiterungsschnittstelle von GNOME Shell 50.6](https://github.com/GNOME/gnome-shell/blob/50.6/data/dbus-interfaces/org.gnome.Shell.Extensions.xml)
+
+**Aufwandsschätzung ab einer funktionsfähigen Installer-Seite:** einige
+Stunden für einen ersten Layoutwechsel in der VM, insgesamt etwa ein bis
+zwei Arbeitstage für die Vorschau aller 16 Erweiterungen samt VM-Tests.
+Ein Prototyp steht aus. Der erste Test folgt der Auswahl „GNOME-Standard“
+→ „Dock“ → „Klassische Taskleiste“ → „GNOME-Standard“. Nach jedem Wechsel
+soll die gewählte Ansicht ohne Neuanmeldung sichtbar sein. Am Ende sollen
+beide Layout-Erweiterungen wieder deaktiviert sein.
 
 ### Startbare Wiederherstellung auf der internen Platte (niedrige Priorität)
 
