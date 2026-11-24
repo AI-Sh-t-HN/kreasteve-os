@@ -32,8 +32,10 @@ genauen Paketstand von NixOS 26.05 fest.
 - **Installieren:** Eine Internetverbindung herstellen. In der GNOME-Übersicht
   **System installieren** öffnen. Im Installer Sprache, Tastaturlayout und
   Zeitzone für das Zielsystem prüfen, die Desktop-Auswahl auf GNOME lassen
-  und den Zieldatenträger prüfen. Nach
-  erfolgreicher Installation das Startmedium entfernen und vom Ziel booten.
+  und den Zieldatenträger prüfen. „Unfreie Software erlauben“ ist vorausgewählt.
+  Wer den Haken entfernt, erlaubt weiterhin die mitgelieferten Pakete für
+  Steam und Visual Studio Code. Nach erfolgreicher Installation das Startmedium
+  entfernen und vom Ziel booten.
 
 ## Hardwarekonfiguration
 
