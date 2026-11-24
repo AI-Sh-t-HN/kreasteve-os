@@ -1,0 +1,13 @@
+/result
+/result-*
+/.direnv/
+*.iso
+*.qcow2
+
+# Lokale Zugangsdaten und Werkzeugeinstellungen
+/.aws/
+/.codex/
+/.agents/
+.env
+.env.*
+!.env.example

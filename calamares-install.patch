@@ -1,0 +1,17 @@
+--- a/modules/nixos/main.py
++++ b/modules/nixos/main.py
+@@ -1045,2 +1045,10 @@
+     libcalamares.utils.host_env_process_output(["cp", "/dev/stdin", config], None, cfg)
++    target_dir = os.path.dirname(config)
++    try:
++        subprocess.run(
++            ["install", "-m", "0644", "/etc/stevo/flake.nix", "/etc/stevo/flake.lock",
++             "/etc/stevo/programs.nix", target_dir], check=True,
++        )
++    except (OSError, subprocess.CalledProcessError) as exc:
++        return (_("Installing NixOS"), str(exc))
+ 
+@@ -1062,2 +1070,3 @@
+             "nixos-install",
++            "--flake", "path:" + target_dir + "#installed",
+             "--no-root-passwd",
