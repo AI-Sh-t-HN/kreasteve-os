@@ -9,13 +9,16 @@
   outputs = { nixpkgs, hermes, windscribe, ... }:
     let
       system = "x86_64-linux";
-      mkSystem = module: nixpkgs.lib.nixosSystem {
+      mkSystem = module: profileArgs: nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs.hermesDesktop = hermes.packages.${system}.desktop;
+        specialArgs = profileArgs // { hermesDesktop = hermes.packages.${system}.desktop; };
         modules = [ windscribe.nixosModules.default ./programs.nix module ];
       };
-      live = mkSystem ./live.nix;
-      installed = mkSystem ./configuration.nix;
+      live = mkSystem ./live.nix { programProfile = "live"; };
+      installed = mkSystem ./configuration.nix {
+        programProfile = "fresh";
+        programTable = ./programme.json;
+      };
     in
     # Calamares writes configuration.nix with the target's disks and user.
     if builtins.pathExists ./configuration.nix then {

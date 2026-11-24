@@ -2,9 +2,18 @@
 
 Ein NixOS-Live-Image mit GNOME für Intel- und AMD-Rechner (x86_64). Dieselbe
 ISO dient zum Ausprobieren in einer VM, zum Start vom USB-Stick und zur
-grafischen Installation. Live und installiert stehen OpenCode (Terminal),
-Podman, Microsoft Visual Studio Code, Hermes Agent Desktop, Windscribe (GUI),
-Steam, OrcaSlicer und Chromium zur Verfügung.
+grafischen Installation.
+
+| Profil | Standardprogramme | GNOME-Dock in Reihenfolge |
+| --- | --- | --- |
+| Live | Chromium, Hermes Agent Desktop, VS Code, OpenCode (Terminal), Firefox | Chromium, VS Code, Firefox |
+| Frische Installation | Alle Live-Programme sowie OrcaSlicer, Podman mit Podman Desktop, Steam und Windscribe (GUI) | Chromium, Hermes Agent Desktop, VS Code, Podman Desktop, Steam, Firefox |
+
+Die [programme.xlsx](programme.xlsx) steuert beide Profile. Im ersten Blatt
+die Werte `ja` oder `nein` für `live`, `fresh`, `live dock` und `fresh dock`
+setzen und die ISO neu bauen. Die Zeilenreihenfolge bestimmt die Reihenfolge
+der Favoriten. Neue Programmnamen brauchen eine Paketzuordnung in
+`programs.nix`. Steve kann die Favoriten nach der Anmeldung in GNOME ändern.
 
 ## ISO bauen
 
@@ -31,13 +40,15 @@ genauen Paketstand von NixOS 26.05 fest.
   innerhalb der Live-Sitzung gehen beim Neustart verloren.
 - **Installieren:** Eine Internetverbindung herstellen. In der GNOME-Übersicht
   **System installieren** öffnen. Im Installer Sprache, Tastaturlayout und
-  Zeitzone für das Zielsystem prüfen, die Desktop-Auswahl auf GNOME lassen
-  und den Zieldatenträger prüfen. „Unfreie Software erlauben“ ist vorausgewählt.
+  Zeitzone für das Zielsystem prüfen. GNOME ist fest eingestellt. Nach dem
+  Anlegen des Benutzerkontos folgt direkt die Seite „Unfreie Software erlauben“
+  mit vorausgewähltem Haken. Anschließend den Zieldatenträger prüfen.
   Wer den Haken entfernt, erlaubt weiterhin die mitgelieferten Pakete für
   Steam und Visual Studio Code. Nach erfolgreicher Installation das Startmedium
   entfernen und vom Ziel booten.
 
-Der VM-Test zur Vorauswahl für unfreie Software ist im [Testprotokoll](TESTPROTOKOLL.md) dokumentiert.
+Die VM-Tests zum Installer und zu den Programmprofilen stehen im
+[Testprotokoll](TESTPROTOKOLL.md).
 
 ## Hardwarekonfiguration
 
@@ -45,10 +56,11 @@ Das Live-System erkennt die Geräte bei jedem Start. Bei der Installation
 erzeugt Calamares im Zielsystem `/etc/nixos/hardware-configuration.nix` aus
 der erkannten Hardware und den gewählten Dateisystemen. Die daneben erzeugte
 `configuration.nix` enthält die Installationsauswahl einschließlich GNOME.
-Calamares kopiert `flake.nix`, `flake.lock` und das gemeinsame Modul
-`programs.nix` nach `/etc/nixos/` und verwendet diese Dateien bereits für
-die Erstinstallation. Spätere Änderungen an der Programmliste lassen sich im
-installierten System mit `sudo nixos-rebuild switch` übernehmen.
+Calamares kopiert `flake.nix`, `flake.lock`, `programs.nix` und die beim
+ISO-Bau aus Excel erzeugte `programme.json` nach `/etc/nixos/`. Bereits die
+Erstinstallation verwendet das Profil `fresh`. Auf dem installierten Rechner
+lassen sich die Auswahl in `/etc/nixos/programme.json` und die Paketzuordnungen
+in `programs.nix` lokal ändern und mit `sudo nixos-rebuild switch` übernehmen.
 
 Hermes Agent Desktop stammt aus dem [Hermes-Projekt](https://github.com/NousResearch/hermes-agent).
 Die offizielle Windscribe-GUI und ihren VPN-Hilfsdienst integriert das

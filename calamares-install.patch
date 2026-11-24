@@ -1,12 +1,26 @@
+--- a/config/settings.conf
++++ b/config/settings.conf
+@@ -119,3 +119,2 @@
+   - users
+-  - packagechooser
+   - notesqml@unfree
 --- a/modules/nixos/main.py
 +++ b/modules/nixos/main.py
-@@ -1045,2 +1045,10 @@
+@@ -611,2 +611,3 @@
+     gs = libcalamares.globalstorage
++    gs.insert("packagechooser_packagechooser", "gnome")
+     variables = dict()
+@@ -923,3 +924,0 @@
+-    if gs.value("packagechooser_packagechooser") != "":
+-        cfg += cfgfirefox
+-
+@@ -1045,2 +1043,10 @@
      libcalamares.utils.host_env_process_output(["cp", "/dev/stdin", config], None, cfg)
 +    target_dir = os.path.dirname(config)
 +    try:
 +        subprocess.run(
 +            ["install", "-m", "0644", "/etc/stevo/flake.nix", "/etc/stevo/flake.lock",
-+             "/etc/stevo/programs.nix", target_dir], check=True,
++             "/etc/stevo/programs.nix", "/etc/stevo/programme.json", target_dir], check=True,
 +        )
 +    except (OSError, subprocess.CalledProcessError) as exc:
 +        return (_("Installing NixOS"), str(exc))

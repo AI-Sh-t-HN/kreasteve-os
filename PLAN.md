@@ -10,13 +10,16 @@ Abstimmung fest. Die Umsetzung beginnt auf gesonderten Auftrag.
   die maßgebliche Quelle für die gewünschte Programmauswahl. Die Spalten
   `live` und `fresh` legen die Programme für das Live-System und die frische
   Installation fest. `live dock` und `fresh dock` bestimmen die jeweiligen
-  Dock-Favoriten.
+  Dock-Favoriten. Beim ISO-Bau wird die Tabelle eingelesen. Die Zeile
+  „Podman“ umfasst die Container-Engine und Podman Desktop. Der Dock-Eintrag
+  startet Podman Desktop.
 - **Desktop** – Der Installer überspringt die Desktop-Auswahl und setzt
   GNOME als Standard für das installierte System.
 - **Unfreie Software** – Der Installer erlaubt unfreie Software standardmäßig
   im Zielsystem. Die bisherige Auswahl wird durch eine reine Hinweisseite
   ersetzt. Sie erklärt kurz den Grund. Mit „Weiter“ geht die Installation
-  weiter, ohne dass eine Auswahl erforderlich ist.
+  weiter, ohne dass eine Auswahl erforderlich ist. Für den aktuellen Stand
+  bleibt die bereits getestete, vorausgewählte Checkbox bestehen.
 
 Textvorschlag für die Hinweisseite:
 
@@ -85,7 +88,8 @@ GPU-Modell und Bauform von Steves Rechner sind unbekannt. Der Live-Stick soll
 auf dem Rechner und in der VM einen benutzbaren GNOME-Desktop starten. Volle
 NVIDIA-Beschleunigung mit dem offiziellen Treiber ist erst im installierten
 System vorgesehen. Steam kann aus dem Live-System entfallen und soll im
-installierten System verfügbar bleiben. Die Größenersparnis ist offen.
+installierten System verfügbar bleiben. Die gemessene Größenänderung für
+alle Programmprofile zusammen steht im Abschnitt „Größenabschätzung“.
 
 Die Wahl des Treiberzweigs hängt von der erkannten GPU ab. Die offenen
 Kernelmodule von NVIDIA unterstützen Turing und neuere GPUs. Für die Abnahme
@@ -187,7 +191,9 @@ Internet funktionieren soll.
 
 ## Größenabschätzung
 
-Das vorhandene ISO misst 5.072.191.488 Byte (4,72 GiB). Für NVIDIA und CUDA
+Die ISO mit getrennten Programmprofilen misst 4.347.205.632 Byte (4,05 GiB).
+Gegenüber der Vergleichs-ISO mit gemeinsamer Programmauswahl
+(5.072.191.488 Byte) spart das 691 MiB. Für NVIDIA und CUDA
 ist der Zuwachs offen. Der volle Grafiktreiber ist erst für die Installation
 vorgesehen. Bei CUDA hängt die ISO-Größe auch davon ab, ob lokales Diktat
 bereits live nutzbar sein soll.
