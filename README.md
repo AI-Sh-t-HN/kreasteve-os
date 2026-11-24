@@ -37,6 +37,8 @@ genauen Paketstand von NixOS 26.05 fest.
   Steam und Visual Studio Code. Nach erfolgreicher Installation das Startmedium
   entfernen und vom Ziel booten.
 
+Der VM-Test zur Vorauswahl für unfreie Software ist im [Testprotokoll](TESTPROTOKOLL.md) dokumentiert.
+
 ## Hardwarekonfiguration
 
 Das Live-System erkennt die Geräte bei jedem Start. Bei der Installation
