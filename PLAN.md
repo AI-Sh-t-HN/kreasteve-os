@@ -4,6 +4,13 @@ Wir prüfen Vorschläge anhand der vorhandenen NixOS- und Calamares-Konfiguratio
 Wenn mehrere Varianten infrage kommen, halten wir die Entscheidung nach der
 Abstimmung fest. Die Umsetzung beginnt auf gesonderten Auftrag.
 
+Für einzelne Installer-Tests werden in einer Testkopie nur die Programme
+aktiviert, die der jeweilige Schritt braucht. Für Partitionierung und
+Ruhezustand genügen Calamares, GNOME und GDM mit ihren Abhängigkeiten.
+Eine bereits gebaute ISO kann weiterverwendet werden, wenn nur die
+Programmauswahl im installierten Testgast verkleinert werden muss.
+Im Testprotokoll steht, welcher Lauf das vollständige Programmprofil prüft.
+
 ## Beschlossen
 
 - **Standardprogramme** – Die [programme.xlsx](programme.xlsx) ist vorerst
@@ -107,12 +114,12 @@ Ziellaufwerksauswahl und die Bestätigung vor dem Löschen bleiben sichtbar,
 auch wenn das externe Steam-Laufwerk angeschlossen ist. Beim vorhandenen
 UEFI-Layout bleibt die EFI-Systempartition unter `/boot` lesbar.
 
-Calamares kennt dafür `initialPartitioningChoice: erase`,
-`initialSwapChoice: suspend` und `preCheckEncryption: true`. Der Installer
-muss das installierte System auch für die Wiederaufnahme einrichten. Bei
-aktivem LUKS muss der verschlüsselte Swap beim nächsten Start wieder
-entsperrbar sein. Abnahme in der VM mit und ohne LUKS: Layout kontrollieren,
-ohne ISO starten und nach echtem Ruhezustand dieselbe Sitzung fortsetzen.
+Calamares verwendet `initialPartitioningChoice: erase`,
+`initialSwapChoice: suspend` und `preCheckEncryption: true`. Für die geführte
+Installation mit Ruhezustand setzt der Installer `boot.resumeDevice` auf den
+gewählten Swap. Beide Varianten sind in einer UEFI-VM abgenommen. Nach dem
+Start ohne ISO und einem vollständigen Ruhezustand kehrte jeweils dieselbe
+GNOME-Sitzung zurück. [Testprotokoll](TESTPROTOKOLL.md)
 [Calamares-Partitionsmodul](https://codeberg.org/Calamares/calamares/src/branch/calamares/src/modules/partition/partition.conf)
 
 Textvorschlag für die Partitionierungsseite:
@@ -191,9 +198,10 @@ Internet funktionieren soll.
 
 ## Größenabschätzung
 
-Die ISO mit getrennten Programmprofilen misst 4.347.205.632 Byte (4,05 GiB).
-Gegenüber der Vergleichs-ISO mit gemeinsamer Programmauswahl
-(5.072.191.488 Byte) spart das 691 MiB. Für NVIDIA und CUDA
+Die ISO mit Element Desktop und Telegram Desktop misst 4.635.574.272 Byte
+(4,32 GiB). Die beiden Messenger vergrößern sie um 275 MiB gegenüber der
+ISO für den Ruhezustandstest (4.347.205.632 Byte). Beim früheren Vergleich
+hatte die Trennung von Live- und Fresh-Profil 691 MiB eingespart. Für NVIDIA und CUDA
 ist der Zuwachs offen. Der volle Grafiktreiber ist erst für die Installation
 vorgesehen. Bei CUDA hängt die ISO-Größe auch davon ab, ob lokales Diktat
 bereits live nutzbar sein soll.

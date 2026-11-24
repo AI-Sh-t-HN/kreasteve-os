@@ -56,6 +56,15 @@ in
 
   nixpkgs.overlays = [
     (_final: prev: {
+      calamares = prev.calamares.overrideAttrs (old: {
+        postPatch = (old.postPatch or "") + ''
+          # fsName is translated. Use the mapper metadata to activate the
+          # right swap device before nixos-generate-config inspects /proc/swaps.
+          substituteInPlace src/modules/mount/main.py \
+            --replace-fail 'if p["fsName"] == "linuxswap"' 'if not p.get("luksMapperName")' \
+            --replace-fail 'if p["fsName"] == "luks" or p["fsName"] == "luks2"' 'if p.get("luksMapperName")'
+        '';
+      });
       calamares-nixos-extensions = prev.calamares-nixos-extensions.overrideAttrs (old: {
         patches = (old.patches or [ ]) ++ [ ./calamares-install.patch ];
       });

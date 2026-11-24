@@ -1,5 +1,73 @@
 # Testprotokoll
 
+## 2026-11-25 – Element Desktop und Telegram Desktop
+
+Release-ISO aus `rwjg10fhqp55xk8npd0jawmdrif9svzl` (Nix-Store-Hash),
+4.635.574.272 Byte (4,32 GiB).
+
+- **Tabelle und Programme geprüft.** Die aus `programme.xlsx` erzeugte
+  `programme.json` entspricht allen elf Zeilen und allen vier Schaltern.
+  Der Live-Systempfad enthält die sieben ausgewählten Tabellenprogramme.
+  Aus den Installer-Dateien der ISO wurde separat der Fresh-Systempfad mit
+  allen elf Tabellenprogrammen gebaut.
+- **Dock-Vorgaben geprüft.** Die kompilierten GNOME-Einstellungen enthalten
+  fünf Favoriten für Live und acht für Fresh, jeweils in Tabellenreihenfolge.
+  In beiden Profilen folgen `element-desktop.desktop` und
+  `org.telegram.desktop.desktop` auf Firefox. Die zugehörigen Starter und
+  die darin aufgerufenen Programme `element-desktop` und `Telegram` sind in
+  beiden gebauten Systempfaden vorhanden.
+- **Live-Sitzung geprüft.** Die endgültige ISO startete ohne Fenster und ohne
+  virtuelle Festplatte. In der Wayland-Sitzung des Live-Benutzers meldete
+  GNOME Chromium, VS Code, Firefox, Element und Telegram als Favoriten.
+  Beide Messenger waren im Systempfad verfügbar. Der Test umfasste die
+  Desktop-Integration. Anmeldung und Nachrichtenaustausch wurden nicht geprüft.
+
+## 2026-11-24/25 – Geführte Partitionierung und Ruhezustand
+
+Test-ISO aus `54ivz82bgxzlzp1pxjnwvv86ggac2faq` (Nix-Store-Hash),
+4.347.205.632 Byte. QEMU/KVM ohne Fenster, UEFI, 6 vCPUs, 6 GiB RAM.
+Als Installationsziel war jeweils nur eine leere virtuelle 64-GiB-Platte
+angeschlossen. Die Live-Benutzersitzung meldete über `loginctl` den Typ
+`wayland`.
+
+- **Vorauswahl geprüft.** Beim ersten Öffnen der deutschen Partitionsseite
+  waren „Festplatte löschen“, „Swap (mit Ruhezustand)“ und „Verschlüssele
+  System“ ausgewählt. Ohne Passphrase blieb „Weiter“ gesperrt. Nach zweimaliger
+  Eingabe zeigte die Zusammenfassung EFI, System und Swap. „Jetzt installieren“
+  musste separat bestätigt werden.
+- **Fehler im ersten Versuch behoben.** Der Installer legte verschlüsselten
+  Swap an, aktivierte ihn aber nicht. Calamares lieferte den Anzeigenamen
+  `LUKS2`, während das Mount-Modul Kleinbuchstaben erwartete. Im erzeugten
+  Zielsystem war `swapDevices` leer. Mount-Modul und Konfigurationsgenerator
+  erkennen verschlüsselten Swap jetzt am Mapper-Namen.
+- **Verschlüsseltes Layout geprüft.** 1 GiB FAT32 für EFI, rund 54,2 GiB
+  LUKS2 mit ext4 für das System und 8,8 GiB LUKS2 für Swap. Im korrigierten
+  Lauf zeigte `swapon` den aktiven Mapper. `swapDevices` und
+  `boot.resumeDevice` bezeichneten denselben Mapper. Die Initrd-Konfiguration
+  verwies auf die äußere LUKS-UUID.
+- **Ruhezustand mit LUKS2 bestanden.** Das vollständige Fresh-Profil erreichte
+  „Alles erledigt“. Ohne ISO von der Platte gestartet, die LUKS-Passphrase
+  eingegeben und als `steve` in GNOME angemeldet. Aus der Sitzung löste
+  `systemctl hibernate` das Ausschalten der VM aus. Bei einem neuen QEMU-Start
+  von derselben Platte genügte wieder eine Passphrase. Das Systemjournal
+  bestätigte die Rückkehr aus `hibernate`. Boot-ID, GNOME-Shell-PID und ein
+  zufälliger Marker unter `/run` hatten dieselben Werte wie vor dem Ausschalten.
+- **Abwahl von LUKS geprüft.** Im zweiten Lauf wurde der Verschlüsselungshaken
+  entfernt. Calamares ließ „Swap (mit Ruhezustand)“ ausgewählt und legte
+  ext4 sowie eine eigene unverschlüsselte Swap-Partition an. Im laufenden
+  Installer war `/dev/vda3` aktiv. In der Zielkonfiguration verwiesen
+  `swapDevices` und `boot.resumeDevice` auf dieselbe Swap-UUID. Für diesen
+  Lauf waren in einer temporären Kopie der Programmtabelle sämtliche
+  `fresh`- und `fresh dock`-Einträge deaktiviert. GNOME und GDM blieben
+  Teil der Installation.
+- **Ruhezustand ohne LUKS bestanden.** Nach einer Unterbrechung des ersten
+  unverschlüsselten Laufs auf dem Host wurde auf einer neuen Testplatte
+  installiert. Die VM startete ohne ISO. Nach Anmeldung und
+  `systemctl hibernate` beendete sich QEMU. Beim erneuten Start bestätigten
+  das Journal, dieselbe Boot-ID, die GNOME-Shell-PID und der RAM-Marker die
+  erfolgreiche Wiederaufnahme. Die Test-VMs wurden beendet und ihre
+  temporären Platten, UEFI-Daten und Zugangsdaten entfernt.
+
 ## 2026-11-24 – Programme und Dock-Favoriten aus Excel
 
 Endgültige ISO aus `sn6sh6czbnn39nrj6sj2ps7xvblphyx0` (Nix-Store-Hash),

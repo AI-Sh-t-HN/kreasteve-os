@@ -6,8 +6,8 @@ grafischen Installation.
 
 | Profil | Standardprogramme | GNOME-Dock in Reihenfolge |
 | --- | --- | --- |
-| Live | Chromium, Hermes Agent Desktop, VS Code, OpenCode (Terminal), Firefox | Chromium, VS Code, Firefox |
-| Frische Installation | Alle Live-Programme sowie OrcaSlicer, Podman mit Podman Desktop, Steam und Windscribe (GUI) | Chromium, Hermes Agent Desktop, VS Code, Podman Desktop, Steam, Firefox |
+| Live | Chromium, Hermes Agent Desktop, VS Code, OpenCode (Terminal), Firefox, Element Desktop, Telegram Desktop | Chromium, VS Code, Firefox, Element Desktop, Telegram Desktop |
+| Frische Installation | Alle Live-Programme sowie OrcaSlicer, Podman mit Podman Desktop, Steam und Windscribe (GUI) | Chromium, Hermes Agent Desktop, VS Code, Podman Desktop, Steam, Firefox, Element Desktop, Telegram Desktop |
 
 Die [programme.xlsx](programme.xlsx) steuert beide Profile. Im ersten Blatt
 die Werte `ja` oder `nein` für `live`, `fresh`, `live dock` und `fresh dock`
@@ -44,8 +44,17 @@ genauen Paketstand von NixOS 26.05 fest.
   Anlegen des Benutzerkontos folgt direkt die Seite „Unfreie Software erlauben“
   mit vorausgewähltem Haken. Anschließend den Zieldatenträger prüfen.
   Wer den Haken entfernt, erlaubt weiterhin die mitgelieferten Pakete für
-  Steam und Visual Studio Code. Nach erfolgreicher Installation das Startmedium
-  entfernen und vom Ziel booten.
+  Steam und Visual Studio Code.
+- **Zielplatte einrichten:** „Festplatte löschen“, Swap für den Ruhezustand
+  und LUKS2-Verschlüsselung sind vorausgewählt. Vor dem Bestätigen Modell
+  und Größe der Zielplatte prüfen, besonders bei angeschlossenen USB-Platten.
+  Die Installation löscht alle vorhandenen Daten auf dem gewählten Laufwerk.
+  Die Partitionierung, die Swap-Auswahl und die Verschlüsselung lassen sich
+  ändern. Bei aktivem LUKS die Passphrase zweimal eingeben und für spätere
+  Starts aufbewahren. Im geführten UEFI-Layout sind System und Swap
+  verschlüsselt, die EFI-Partition unter `/boot` bleibt lesbar.
+- **Erster Start:** Nach erfolgreicher Installation das Startmedium entfernen
+  und von der Zielplatte booten.
 
 Die VM-Tests zum Installer und zu den Programmprofilen stehen im
 [Testprotokoll](TESTPROTOKOLL.md).

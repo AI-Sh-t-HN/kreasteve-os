@@ -17,6 +17,8 @@ let
     Steam.desktop = "steam.desktop";
     "Windscribe (GUI)".desktop = "windscribe.desktop";
     Firefox.desktop = "firefox.desktop";
+    "element-desktop" = { package = pkgs.element-desktop; desktop = "element-desktop.desktop"; };
+    "Telegram Desktop" = { package = pkgs.telegram-desktop; desktop = "org.telegram.desktop.desktop"; };
   };
   favoriteIds = map (row: catalog.${row.programm}.desktop) favorites;
 in

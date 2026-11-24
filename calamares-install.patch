@@ -4,17 +4,51 @@
    - users
 -  - packagechooser
    - notesqml@unfree
+@@ -153 +152 @@
+-prompt-install: false
++prompt-install: true
 --- a/modules/nixos/main.py
 +++ b/modules/nixos/main.py
 @@ -611,2 +611,3 @@
      gs = libcalamares.globalstorage
 +    gs.insert("packagechooser_packagechooser", "gnome")
      variables = dict()
-@@ -923,3 +924,0 @@
+@@ -649,11 +650,20 @@
+-    # Setup encrypted swap devices. nixos-generate-config doesn't seem to notice them.
++    # Only the guided erase layout creates a dedicated hibernation partition.
++    choices = gs.value("partitionChoices") or {}
++    resume_swap = choices.get("install") == "erase" and choices.get("swap") == "suspend"
++    resume_device = None
+     for part in gs.value("partitions"):
+-        if (
+-            part["claimed"] is True
+-            and (part["fsName"] == "luks" or part["fsName"] == "luks2")
+-            and part["device"] is not None
+-            and part["fs"] == "linuxswap"
+-        ):
+-            cfg += """  boot.initrd.luks.devices."{}".device = "/dev/disk/by-uuid/{}";\n""".format(
+-                part["luksMapperName"], part["uuid"]
+-            )
++        if not part.get("claimed") or part.get("fs") != "linuxswap":
++            continue
++        if part.get("luksMapperName"):
++            mapper = part["luksMapperName"]
++            cfg += f'  boot.initrd.luks.devices."{mapper}".device = "/dev/disk/by-uuid/{part["luksUuid"]}";\n'
++            device = "/dev/mapper/" + mapper
++        else:
++            device = "/dev/disk/by-uuid/" + part["uuid"]
++        if resume_swap:
++            resume_device = device
++
++    if resume_swap:
++        if not resume_device:
++            return (_("Installing NixOS"), _("Kein Swap für den gewählten Ruhezustand angelegt. Bitte die Zielplattengröße prüfen."))
++        cfg += f'  boot.resumeDevice = "{resume_device}";\n'
+@@ -923,3 +932,0 @@
 -    if gs.value("packagechooser_packagechooser") != "":
 -        cfg += cfgfirefox
 -
-@@ -1045,2 +1043,10 @@
+@@ -1045,2 +1052,10 @@
      libcalamares.utils.host_env_process_output(["cp", "/dev/stdin", config], None, cfg)
 +    target_dir = os.path.dirname(config)
 +    try:
@@ -25,7 +59,7 @@
 +    except (OSError, subprocess.CalledProcessError) as exc:
 +        return (_("Installing NixOS"), str(exc))
  
-@@ -1062,2 +1070,3 @@
+@@ -1063,2 +1078,3 @@
              "nixos-install",
 +            "--flake", "path:" + target_dir + "#installed",
              "--no-root-passwd",
@@ -40,3 +74,11 @@
 +                Component.onCompleted: {
 +                    checked = !Global.contains("nixos_allow_unfree") || Global.value("nixos_allow_unfree")
 +                }
+--- a/config/modules/partition.conf
++++ b/config/modules/partition.conf
+@@ -8 +8,5 @@
++initialPartitioningChoice: erase
++initialSwapChoice: suspend
++preCheckEncryption: true
++
+ userSwapChoices:
