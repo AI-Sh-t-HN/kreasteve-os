@@ -15,7 +15,7 @@
         modules = [ windscribe.nixosModules.default ./programs.nix module ];
       };
       live = mkSystem ./live.nix { programProfile = "live"; };
-      installed = mkSystem ./configuration.nix {
+      installed = mkSystem { imports = [ ./configuration.nix ./gnome-extensions.nix ]; } {
         programProfile = "fresh";
         programTable = ./programme.json;
       };

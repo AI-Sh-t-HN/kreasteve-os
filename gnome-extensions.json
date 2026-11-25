@@ -1,0 +1,19 @@
+[
+  {"id":"standard","group":"layout","label":"GNOME-Standard"},
+  {"id":"dash-to-dock","group":"layout","label":"Dock","default":true},
+  {"id":"dash-to-panel","group":"layout","label":"Klassische Taskleiste"},
+  {"id":"clipboard-indicator","label":"Zwischenablage durchsuchen","description":"Clipboard Indicator · Nur angeheftete Einträge bleiben nach der Sitzung erhalten.","default":true},
+  {"id":"appindicator","label":"Statussymbole anzeigen","description":"AppIndicator Support · Zeigt Hintergrundprogramme in der oberen Leiste.","default":true},
+  {"id":"tiling-assistant","label":"Fenster nebeneinander anordnen","description":"Tiling Assistant · Fenster an die Bildschirmränder ziehen und einrasten lassen.","default":true},
+  {"id":"caffeine","label":"Bildschirm bei Bedarf wach halten","description":"Caffeine · Fügt einen Schalter für den automatischen Standby hinzu."},
+  {"id":"gsconnect","label":"Smartphone mit dem Rechner verbinden","description":"GSConnect · Dateien und Benachrichtigungen im lokalen Netzwerk austauschen."},
+  {"id":"blur-my-shell","group":"more","label":"Blur my Shell","description":"Unschärfe und Transparenz für die GNOME-Oberfläche."},
+  {"id":"just-perfection","group":"more","label":"Just Perfection","description":"Aussehen und Verhalten von GNOME anpassen."},
+  {"id":"alphabetical-app-grid","group":"more","label":"Alphabetical App Grid","description":"Anwendungen in der Übersicht alphabetisch sortieren."},
+  {"id":"user-themes","group":"more","label":"User Themes","description":"Eigene Designs für die GNOME Shell verwenden."},
+  {"id":"vitals","group":"more","label":"Vitals","description":"Auslastung, Temperaturen und Netzwerkaktivität anzeigen."},
+  {"id":"night-theme-switcher","group":"more","label":"Night Theme Switcher","description":"Zwischen hellem und dunklem Design wechseln."},
+  {"id":"privacy-settings-menu","group":"more","label":"Privacy Quick Settings","description":"Datenschutzeinstellungen im Systemmenü öffnen."},
+  {"id":"extension-list","group":"more","label":"Extension List","description":"Erweiterungen über die obere Leiste verwalten."},
+  {"id":"applications-menu","group":"more","label":"Apps Menu","description":"Anwendungen in einem klassischen Kategorienmenü öffnen."}
+]

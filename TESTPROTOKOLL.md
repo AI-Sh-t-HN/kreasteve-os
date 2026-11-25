@@ -1,5 +1,57 @@
 # Testprotokoll
 
+## 2026-11-25 – GNOME-Erweiterungen im geführten Installer
+
+Die fokussierte Test-ISO aus `frwgnfi36413hsph5ixvcxprf96sdhdr` wurde
+mit einer Kopie der Programmtabelle gebaut. In beiden Profilen waren die
+Tabellenprogramme ausgeschaltet. QEMU/KVM verwendete UEFI, 6 vCPUs,
+6 GiB RAM und eine leere virtuelle 64-GiB-Platte. Für diesen Test war
+LUKS abgewählt. Der Testgast erhielt zusätzlich den QEMU-Gastagenten.
+TigerVNC zeigte die Sitzung über einen privaten Unix-Socket im Ansichtsmodus,
+ohne Weitergabe der Host-Zwischenablage. Die Eingaben kamen über QMP.
+Beim Wechsel vom Live-Gast zur installierten VM trennte sich der Viewer.
+Nach dem Neuverbinden bestätigte QEMU einen angeschlossenen Zuschauer und
+die GNOME-Abfrage erneut die vier aktiven Erweiterungen der Vorauswahl.
+
+- **Installer-Seite.** Nach der Unfree-Seite erschien „GNOME Extensions“ mit
+  vorausgewähltem Dock, Clipboard Indicator, AppIndicator und Tiling Assistant.
+  Caffeine und GSConnect waren abgewählt. „Weitere Erweiterungen“ war
+  eingeklappt. Der Wechsel zur klassischen Taskleiste wählte das Dock ab.
+  Im Zielverzeichnis standen die drei Häkchen, Dash to Panel und die manuell
+  ausgewählte Alphabetical App Grid in `selected-extensions.json`.
+- **Profile.** Die kompilierten dconf-Datenbanken für die Vorauswahl, für
+  „GNOME-Standard“ ohne Extras und für die Taskleiste mit sämtlichen Extras
+  enthielten vier, null bzw. fünfzehn Erweiterungen. Der Paketbau umfasste
+  auch Extension List 45. Die Vorauswahl enthält für Clipboard Indicator
+  `cache-only-favorites=true`, `cache-images=false` und `display-mode=0`.
+- **Fehler im ersten Lauf.** Die Fresh-Auswertung brach beim untypisierten
+  Zahlenwert für `display-mode` ab. Mit dem vom Schema geforderten Int32
+  wurden alle drei dconf-Profile erfolgreich gebaut. Der nächste Calamares-Lauf
+  endete erfolgreich und erzeugte den UEFI-Eintrag „Linux Boot Manager“.
+- **Erster Login ohne ISO.** Nach der GDM-Anmeldung als `steve` meldete
+  `gnome-extensions list --active` genau die gewählte Taskleiste, Clipboard
+  Indicator, AppIndicator, Tiling Assistant und Alphabetical App Grid. Der
+  Schlüssel `org.gnome.shell enabled-extensions` war beschreibbar.
+- **Zwischenablage.** Clipboard Indicator 71 hängt im Original den neuesten
+  Eintrag nach dem Filtern an die Schreibwarteschlange an. Mit der Korrektur
+  erschien der aus GNOME Text Editor kopierte Beispieltext im Verlaufsmenü.
+  Die Cache-Datei enthielt weiterhin `[]`. Erst nach dem Anheften erschien
+  der Text darin als Favorit. Das Kopieren eines zweiten, ungepinnten Textes
+  ließ die Datei beim einzelnen Favoriten.
+- **Kuratiertes Dock nach Neustart.** In der installierten Test-VM wurde die
+  Auswahl auf die vier Katalog-Defaults gesetzt und mit `nixos-rebuild boot`
+  eine zweite Generation gebaut. Nach dem Neustart meldete GNOME genau Dash
+  to Dock, Clipboard Indicator, AppIndicator und Tiling Assistant als aktiv.
+  Das geöffnete Zwischenablagemenü enthielt nur den angehefteten Testtext.
+  Die zusätzlichen Erweiterungen außerhalb dieser beiden Sitzungen wurden
+  als Pakete geprüft.
+- **Reguläre ISO.** `result/iso/` verweist auf den neuen Build
+  `cqkp9bgxk5cjrnxdyzg25d4qgkjwvqqi` mit 4.635.574.272 Byte.
+  SHA-256: `fd6959a07d0af64909e0e2c541e21d3c204e138465b86ea8b0a96cf425115f80`.
+  Die Installer-Dateien im gebauten Live-System entsprechen dem Arbeitsbaum.
+  Seine Programmtabelle enthält sieben aktivierte Live- und elf Fresh-Programme.
+  Der sichtbare Installationslauf verwendete die oben genannte schlanke Test-ISO.
+
 ## 2026-11-25 – Element Desktop und Telegram Desktop
 
 Release-ISO aus `rwjg10fhqp55xk8npd0jawmdrif9svzl` (Nix-Store-Hash),

@@ -54,6 +54,9 @@ in
   environment.etc."stevo/flake.lock".source = ./flake.lock;
   environment.etc."stevo/programs.nix".source = ./programs.nix;
 
+  environment.etc."stevo/gnome-extensions.nix".source = ./gnome-extensions.nix;
+  environment.etc."stevo/gnome-extensions.json".source = ./gnome-extensions.json;
+
   nixpkgs.overlays = [
     (_final: prev: {
       calamares = prev.calamares.overrideAttrs (old: {
@@ -67,6 +70,15 @@ in
       });
       calamares-nixos-extensions = prev.calamares-nixos-extensions.overrideAttrs (old: {
         patches = (old.patches or [ ]) ++ [ ./calamares-install.patch ];
+        postPatch = (old.postPatch or "") + ''
+          substitute ${./gnome-extensions.qml} branding/nixos/notesqml@extensions.qml \
+            --replace-fail '@catalog@' ${lib.escapeShellArg (builtins.toJSON (lib.importJSON ./gnome-extensions.json))}
+          cat > config/modules/extensions.conf <<'EOF'
+          qmlSearch: branding
+          qmlLabel:
+            notes: "GNOME Extensions"
+          EOF
+        '';
       });
     })
   ];

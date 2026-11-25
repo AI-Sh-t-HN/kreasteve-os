@@ -42,9 +42,15 @@ genauen Paketstand von NixOS 26.05 fest.
   **System installieren** öffnen. Im Installer Sprache, Tastaturlayout und
   Zeitzone für das Zielsystem prüfen. GNOME ist fest eingestellt. Nach dem
   Anlegen des Benutzerkontos folgt direkt die Seite „Unfreie Software erlauben“
-  mit vorausgewähltem Haken. Anschließend den Zieldatenträger prüfen.
+  mit vorausgewähltem Haken.
   Wer den Haken entfernt, erlaubt weiterhin die mitgelieferten Pakete für
   Steam und Visual Studio Code.
+- **GNOME Extensions:** Vor der Zielauswahl lässt sich der installierte Desktop
+  anpassen. Dock, durchsuchbare Zwischenablage, Statussymbole und Tiling
+  Assistant sind vorausgewählt. Beim Zwischenablageverlauf bleiben nur
+  angeheftete Texte über die Sitzung hinaus erhalten. Caffeine und GSConnect
+  sind optional, weitere Erweiterungen lassen sich aufklappen. Die Vorgaben
+  bleiben nach dem ersten Login änderbar.
 - **Zielplatte einrichten:** „Festplatte löschen“, Swap für den Ruhezustand
   und LUKS2-Verschlüsselung sind vorausgewählt. Vor dem Bestätigen Modell
   und Größe der Zielplatte prüfen, besonders bei angeschlossenen USB-Platten.
@@ -67,7 +73,9 @@ der erkannten Hardware und den gewählten Dateisystemen. Die daneben erzeugte
 `configuration.nix` enthält die Installationsauswahl einschließlich GNOME.
 Calamares kopiert `flake.nix`, `flake.lock`, `programs.nix` und die beim
 ISO-Bau aus Excel erzeugte `programme.json` nach `/etc/nixos/`. Bereits die
-Erstinstallation verwendet das Profil `fresh`. Auf dem installierten Rechner
+Erstinstallation verwendet das Profil `fresh`. Der Installer legt außerdem
+`gnome-extensions.nix`, den Katalog `gnome-extensions.json` und Steves
+Auswahl in `selected-extensions.json` dort ab. Auf dem installierten Rechner
 lassen sich die Auswahl in `/etc/nixos/programme.json` und die Paketzuordnungen
 in `programs.nix` lokal ändern und mit `sudo nixos-rebuild switch` übernehmen.
 

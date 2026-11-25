@@ -1,10 +1,17 @@
 --- a/config/settings.conf
 +++ b/config/settings.conf
-@@ -119,3 +119,2 @@
+@@ -89,2 +89,5 @@
+   config:   unfree.conf
++- id:       extensions
++  module:   notesqml
++  config:   extensions.conf
+ - module:   nixos
+@@ -119,3 +122,3 @@
    - users
 -  - packagechooser
    - notesqml@unfree
-@@ -153 +152 @@
++  - notesqml@extensions
+@@ -153 +156 @@
 -prompt-install: false
 +prompt-install: true
 --- a/modules/nixos/main.py
@@ -48,18 +55,26 @@
 -    if gs.value("packagechooser_packagechooser") != "":
 -        cfg += cfgfirefox
 -
-@@ -1045,2 +1052,10 @@
+@@ -1045,2 +1052,18 @@
      libcalamares.utils.host_env_process_output(["cp", "/dev/stdin", config], None, cfg)
 +    target_dir = os.path.dirname(config)
 +    try:
 +        subprocess.run(
 +            ["install", "-m", "0644", "/etc/stevo/flake.nix", "/etc/stevo/flake.lock",
-+             "/etc/stevo/programs.nix", "/etc/stevo/programme.json", target_dir], check=True,
++             "/etc/stevo/programs.nix", "/etc/stevo/programme.json",
++             "/etc/stevo/gnome-extensions.nix", "/etc/stevo/gnome-extensions.json",
++             target_dir], check=True,
 +        )
-+    except (OSError, subprocess.CalledProcessError) as exc:
++        selection = json.loads(gs.value("stevo_gnome_extensions") or "null")
++        if not isinstance(selection, list):
++            raise ValueError("Die GNOME-Erweiterungsauswahl fehlt.")
++        with open(os.path.join(target_dir, "selected-extensions.json"), "w") as choices_file:
++            json.dump(selection, choices_file)
++            choices_file.write("\n")
++    except (OSError, ValueError, subprocess.CalledProcessError) as exc:
 +        return (_("Installing NixOS"), str(exc))
  
-@@ -1063,2 +1078,3 @@
+@@ -1063,2 +1086,3 @@
              "nixos-install",
 +            "--flake", "path:" + target_dir + "#installed",
              "--no-root-passwd",
